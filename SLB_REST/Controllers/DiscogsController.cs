@@ -7,8 +7,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SLB_REST.Context;
 using SLB_REST.Helpers;
+using SLB_REST.Helpers.DataBaseStrategy;
 using SLB_REST.Helpers.Proxy;
 using SLB_REST.Models;
+using Newtonsoft.Json.Linq;
 
 namespace SLB_REST.Controllers
 {
@@ -16,25 +18,19 @@ namespace SLB_REST.Controllers
     public class DiscogsController : Controller
 	{
         private readonly EFContext _context;
-        private SourceManagerEF _sourceManagerEF;
-        private DiscogsClientModel _discogsClient;
-        private SourceManagerSaveJson _sourceManagerSaveJson;
         private readonly ProxyDiscogs _proxyDiscogs;
+		private readonly DatabaseStrategy _databaseStrategy;
 
-        public DiscogsController(
-            SourceManagerEF sourceManagerEF, 
+		public DiscogsController(
             EFContext context, 
-            DiscogsClientModel discogsClient,
-            SourceManagerSaveJson sourceManagerSaveJson,
-            ProxyDiscogs proxyDiscogs)
+            ProxyDiscogs proxyDiscogs,
+			DatabaseStrategy databaseStrategy)
         {
             _context = context;
-            _sourceManagerEF = sourceManagerEF;
-            _discogsClient = discogsClient;
-            _sourceManagerSaveJson = sourceManagerSaveJson;
             _proxyDiscogs = proxyDiscogs;
-        }
+			_databaseStrategy = databaseStrategy;
 
+		}
 
         public IActionResult Albums(string queryUser = "")
 		{
@@ -73,39 +69,16 @@ namespace SLB_REST.Controllers
 		[HttpPost]
 		public IActionResult Add(string link)
 		{
+			int userId = _context.Users
+			.Where(u => u.UserName == User.Identity.Name)
+			.Single().Id;
 
-            AlbumModel album = _sourceManagerEF.Load(link).GetAlbum();
+			_databaseStrategy
+			.Context(new AddNewDB())
+			.Load(JObject.Parse(link), userId)
+			.SaveChanges(_context);
 
-			if (album != null)
-			{
-				album = addAlbum(album);
-				_sourceManagerSaveJson.Load(_context, _sourceManagerEF).addTracks(album);
-				_sourceManagerSaveJson.addVideos(album);
-				_sourceManagerSaveJson.addStyles(album);
-				_sourceManagerSaveJson.addGenres(album);
-				_sourceManagerSaveJson.addImages(album);
-				_sourceManagerSaveJson.addArtists(album);
-				_sourceManagerSaveJson.addAlbumThumb(album);
-				_context.SaveChanges();
-
-				return Ok();
-			}
-
-			return StatusCode(403);
-        }
-
-        private AlbumModel addAlbum(AlbumModel album)
-        {
-            UserModel user = _context.Users
-            .Where(u => u.UserName == User.Identity.Name).SingleOrDefault();
-
-            album.User = new UserModel();
-            album.ID = 0;
-            album.User.Id = user.Id;
-            _context.Albums.Add(album);
-            _context.SaveChanges();
-
-            return album;
-        }
+			return Ok();
+		}
     }
 }

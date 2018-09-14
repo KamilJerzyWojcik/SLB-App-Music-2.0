@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SLB_REST.Context;
 using SLB_REST.Helpers;
+using SLB_REST.Helpers.DataBaseStrategy;
 using SLB_REST.Helpers.Proxy;
 using SLB_REST.Models;
 
@@ -37,9 +38,11 @@ namespace SLB_REST
             services.AddTransient<SourceManagerDeleteAlbum>();
             services.AddTransient<SourceManagerSaveJson>();
             services.AddTransient<ProxyDiscogs>();
-            
+			services.AddTransient<DatabaseStrategy>();
 
-            services.AddIdentity<UserModel, IdentityRole<int>>().AddEntityFrameworkStores<EFContext>().AddDefaultTokenProviders();
+
+
+			services.AddIdentity<UserModel, IdentityRole<int>>().AddEntityFrameworkStores<EFContext>().AddDefaultTokenProviders();
 
 			services.AddMvc();
 		}
