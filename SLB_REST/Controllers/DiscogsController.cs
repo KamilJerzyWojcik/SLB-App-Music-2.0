@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SLB_REST.Context;
 using SLB_REST.Helpers;
+using SLB_REST.Helpers.Proxy;
 using SLB_REST.Models;
 
 namespace SLB_REST.Controllers
@@ -18,17 +19,20 @@ namespace SLB_REST.Controllers
         private SourceManagerEF _sourceManagerEF;
         private DiscogsClientModel _discogsClient;
         private SourceManagerSaveJson _sourceManagerSaveJson;
+        private readonly ProxyDiscogs _proxyDiscogs;
 
         public DiscogsController(
             SourceManagerEF sourceManagerEF, 
             EFContext context, 
             DiscogsClientModel discogsClient,
-            SourceManagerSaveJson sourceManagerSaveJson)
+            SourceManagerSaveJson sourceManagerSaveJson,
+            ProxyDiscogs proxyDiscogs)
         {
             _context = context;
             _sourceManagerEF = sourceManagerEF;
             _discogsClient = discogsClient;
             _sourceManagerSaveJson = sourceManagerSaveJson;
+            _proxyDiscogs = proxyDiscogs;
         }
 
 
@@ -47,9 +51,11 @@ namespace SLB_REST.Controllers
 		}
 
 		public IActionResult GetJsonByQuery(string queryUser)
-		{	
-			string[] query = queryUser.Split(",");
-			string json = _discogsClient.SetQuery(query).SearchJsonByQuery();
+		{
+            string json = _proxyDiscogs.Context(new JsonByUser()).LinkQuery(queryUser).GetJson();
+
+   //         string[] query = queryUser.Split(",");
+			//string json = _discogsClient.SetQuery(query).SearchJsonByQuery();
 			return Content(json);
 		}
 
