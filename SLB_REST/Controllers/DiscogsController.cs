@@ -52,22 +52,21 @@ namespace SLB_REST.Controllers
 
 		public IActionResult GetJsonByQuery(string queryUser)
 		{
-            string json = _proxyDiscogs.Context(new JsonByUser()).LinkQuery(queryUser).GetJson();
+            string json = _proxyDiscogs
+			.Context(new JsonByUser())
+			.LinkQuery(queryUser)
+			.GetJson();
 
-   //         string[] query = queryUser.Split(",");
-			//string json = _discogsClient.SetQuery(query).SearchJsonByQuery();
 			return Content(json);
 		}
 
 		public IActionResult GetJsonByLink(string link)
 		{
-			string json = _discogsClient.SetLink(link).GetJsonByLink();
-			return Content(json);
-		}
+			string json = _proxyDiscogs
+			.Context(new JsonByLink())
+			.LinkQuery(link)
+			.GetJson();
 
-		public IActionResult Album(string resource)
-		{
-			string json = _discogsClient.SetLink(resource).GetJsonByLink();
 			return Content(json);
 		}
 
@@ -77,17 +76,22 @@ namespace SLB_REST.Controllers
 
             AlbumModel album = _sourceManagerEF.Load(link).GetAlbum();
 
-            album = addAlbum(album);
-            _sourceManagerSaveJson.Load(_context, _sourceManagerEF).addTracks(album);
-             _sourceManagerSaveJson.addVideos(album);
-            _sourceManagerSaveJson.addStyles(album);
-            _sourceManagerSaveJson.addGenres(album);
-            _sourceManagerSaveJson.addImages(album);
-            _sourceManagerSaveJson.addArtists(album);
-            _sourceManagerSaveJson.addAlbumThumb(album);
-            _context.SaveChanges();
+			if (album != null)
+			{
+				album = addAlbum(album);
+				_sourceManagerSaveJson.Load(_context, _sourceManagerEF).addTracks(album);
+				_sourceManagerSaveJson.addVideos(album);
+				_sourceManagerSaveJson.addStyles(album);
+				_sourceManagerSaveJson.addGenres(album);
+				_sourceManagerSaveJson.addImages(album);
+				_sourceManagerSaveJson.addArtists(album);
+				_sourceManagerSaveJson.addAlbumThumb(album);
+				_context.SaveChanges();
 
-            return Ok();
+				return Ok();
+			}
+
+			return StatusCode(403);
         }
 
         private AlbumModel addAlbum(AlbumModel album)

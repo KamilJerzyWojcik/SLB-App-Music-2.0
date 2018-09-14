@@ -25,7 +25,7 @@ namespace SLB_REST.Helpers.Proxy
 
         public string GetJson()
         {
-            string result;
+            string result = null;
             try
             {
                 if (string.IsNullOrEmpty(Query)) throw new Exception("No Link, use SetLink()");

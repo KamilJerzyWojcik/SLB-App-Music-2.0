@@ -145,7 +145,6 @@ namespace SLB_REST.Models
 					client.Headers.Add($"Authorization: Discogs key={Key}, secret={Secret}");
 
 					client.UseDefaultCredentials = true;
-
 					result = client.DownloadString(Link);
 				}
 				return result;

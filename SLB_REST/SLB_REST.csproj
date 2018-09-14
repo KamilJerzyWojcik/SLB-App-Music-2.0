@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="Helpers\NewFolder\" />
     <Folder Include="wwwroot\lib\jQuery\" />
   </ItemGroup>
 

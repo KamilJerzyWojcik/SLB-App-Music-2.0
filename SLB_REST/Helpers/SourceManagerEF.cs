@@ -22,9 +22,15 @@ namespace SLB_REST.Helpers
 
         public SourceManagerEF Load(string link)
         {
-            string result = discogsClient.SetLink(link).GetJsonByLink();
-            _albumJSON = JObject.Parse(result);
-
+			if (link != null)
+			{
+				string result = discogsClient.SetLink(link).GetJsonByLink();
+				_albumJSON = JObject.Parse(result);
+			}
+			else
+			{
+				_albumJSON = null;
+			}
             return this;
         }
 

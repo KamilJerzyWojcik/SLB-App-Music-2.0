@@ -150,8 +150,8 @@ function addAlbums(res) {
 
         details.addEventListener("click", function () {
             $.ajax({
-                url: "/Discogs/Album",
-                data: { resource: results[i].resource_url },
+                url: "/Discogs/GetJsonByLink",
+                data: { link: results[i].resource_url },
                 type: "GET",
                 dataType: "json"
             }).done(function (result) {

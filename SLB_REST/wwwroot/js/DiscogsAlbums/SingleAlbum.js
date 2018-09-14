@@ -1,8 +1,10 @@
 ﻿function showAlbum(resouce, albums) {
 
     showAlbumDetails(resouce, albums);
-}
+    console.log(resouce);//pobrany json z danymi
+    console.log(albums);//lista wyszukań
 
+}
 
 function showAlbumDetails(res, albums) {
 
@@ -239,6 +241,7 @@ function addButtons(albums, resouce) {
 
     var backButton = AlbumsHelper.addButton("Back", "warning", btnBack);
     backButton.classList.add("btn-block")
+
     backButton.addEventListener("click", function () {
         $("iframe").remove();
         $("#player-nav").remove();
@@ -259,7 +262,7 @@ function addButtons(albums, resouce) {
 
         $.ajax({
             url: "/Discogs/Add",
-            data: { link: resouce.resource_url },
+            data: { link: JSON.stringify(resouce) },
             type: "POST"
         }).done(function () {
             var btnLoader = document.getElementById("btn-add").querySelector("div.loader");
