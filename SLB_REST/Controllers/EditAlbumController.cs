@@ -108,7 +108,6 @@ namespace SLB_REST.Controllers
             return Json(artView);
         }
 
-
         [HttpGet]
         public IActionResult Artists(int id)
         {

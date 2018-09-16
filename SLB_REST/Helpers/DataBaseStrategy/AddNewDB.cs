@@ -26,33 +26,33 @@ namespace SLB_REST.Helpers.DataBaseStrategy
 		{
 			List<int> ids = new List<int>(){ UserId };
 
-			IChainAdd addAlbumThumb = new ChainAddAlbumThumb();
+            IChainChange addAlbumThumb = new ChainAddAlbumThumb();
 
-			IChainAdd addExtraartists = new ChainAddExtraartists();
+            IChainChange addExtraartists = new ChainAddExtraartists();
 			addExtraartists.SetSuccessor(addAlbumThumb);
 
-			IChainAdd addTracks = new ChainAddTracks();
+            IChainChange addTracks = new ChainAddTracks();
 			addTracks.SetSuccessor(addExtraartists);
 
-			IChainAdd addStyles = new ChainAddStyles();
+            IChainChange addStyles = new ChainAddStyles();
 			addStyles.SetSuccessor(addTracks);
 
-			IChainAdd addGenres = new ChainAddGenres();
+            IChainChange addGenres = new ChainAddGenres();
 			addGenres.SetSuccessor(addStyles);
 
-			IChainAdd addArtists = new ChainAddArtists();
+            IChainChange addArtists = new ChainAddArtists();
 			addArtists.SetSuccessor(addGenres);
 
-			IChainAdd addImages = new ChainAddImages();
+            IChainChange addImages = new ChainAddImages();
 			addImages.SetSuccessor(addArtists);
 
-			IChainAdd addVideos = new ChainAddVideo();
+            IChainChange addVideos = new ChainAddVideo();
 			addVideos.SetSuccessor(addImages);
 
-			IChainAdd addAlbum = new ChainAddAlbum();
+            IChainChange addAlbum = new ChainAddAlbum();
 			addAlbum.SetSuccessor(addVideos);
 
-			addAlbum.SaveToDB(_context, JsonFile, ids);
+			addAlbum.ChangeDB(_context, JsonFile, ids);
 		}
 
 	}

@@ -5,7 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Helpers\NewFolder\" />
+    <Compile Remove="Helpers\NewFolder\**" />
+    <Content Remove="Helpers\NewFolder\**" />
+    <EmbeddedResource Remove="Helpers\NewFolder\**" />
+    <None Remove="Helpers\NewFolder\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="wwwroot\lib\jQuery\" />
   </ItemGroup>
 

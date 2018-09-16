@@ -8,21 +8,21 @@ using SLB_REST.Models;
 
 namespace SLB_REST.Helpers.DataBaseStrategy.DBChainResp
 {
-	public class ChainAddStyles : IChainAdd
+	public class ChainAddStyles : IChainChange
 	{
-		public IChainAdd Successor { get; private set; }
+		public IChainChange Successor { get; private set; }
 
-		public void SetSuccessor(IChainAdd successor)
+		public void SetSuccessor(IChainChange successor)
 		{
 			Successor = successor;
 		}
 
-		public void SaveToDB(EFContext context, JObject jsonFile, List<int> ids)
+		public void ChangeDB(EFContext context, JObject jsonFile, List<int> ids)
 		{
 			if (ids.Count != 2)
 			{
 				if (Successor != null)
-					Successor.SaveToDB(context, jsonFile, ids);
+					Successor.ChangeDB(context, jsonFile, ids);
 			}
 			else
 			{
@@ -41,7 +41,7 @@ namespace SLB_REST.Helpers.DataBaseStrategy.DBChainResp
 						context.SaveChanges();
 					}
 					if (Successor != null)
-						Successor.SaveToDB(context, jsonFile, ids);
+						Successor.ChangeDB(context, jsonFile, ids);
 				}
 				catch (Exception)
 				{
@@ -56,7 +56,7 @@ namespace SLB_REST.Helpers.DataBaseStrategy.DBChainResp
 					context.SaveChanges();
 
 					if (Successor != null)
-						Successor.SaveToDB(context, jsonFile, ids);
+						Successor.ChangeDB(context, jsonFile, ids);
 				}
 			}
 		}

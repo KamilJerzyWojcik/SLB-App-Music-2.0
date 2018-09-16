@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace SLB_REST.Helpers.DataBaseStrategy.DBChainResp
 {
-	public interface IChainAdd
+	public interface IChainChange
 	{
-		IChainAdd Successor { get; }
-		void SetSuccessor(IChainAdd successor);
-		void SaveToDB(EFContext context, JObject jsonFile, List<int> ids);
+        IChainChange Successor { get; }
+        void SetSuccessor(IChainChange successor);
+        void ChangeDB(EFContext context, JObject jsonFile, List<int> ids);
 	}
 }

@@ -8,21 +8,21 @@ using System.Threading.Tasks;
 
 namespace SLB_REST.Helpers.DataBaseStrategy.DBChainResp
 {
-	public class ChainAddAlbum : IChainAdd
+	public class ChainAddAlbum : IChainChange
 	{
-		public IChainAdd Successor { get; private set; }
+		public IChainChange Successor { get; private set; }
 
-		public void SetSuccessor(IChainAdd successor)
+		public void SetSuccessor(IChainChange successor)
 		{
 			Successor = successor;
 		}
 
-		public void SaveToDB(EFContext context, JObject jsonFile, List<int> ids)
+		public void ChangeDB(EFContext context, JObject jsonFile, List<int> ids)
 		{
 			if (ids.Count == 0)
 			{
 				if (Successor != null)
-					Successor.SaveToDB(context, jsonFile, ids);
+					Successor.ChangeDB(context, jsonFile, ids);
 			}
 			else
 			{
@@ -42,7 +42,7 @@ namespace SLB_REST.Helpers.DataBaseStrategy.DBChainResp
 				ids.Add(album.ID);
 
 				if (Successor != null)
-					Successor.SaveToDB(context, jsonFile, ids);
+					Successor.ChangeDB(context, jsonFile, ids);
 			}
 		}
 
