@@ -20,7 +20,7 @@ namespace SLB_REST.Helpers.DataBaseStrategy.ChainRespEditDB
 
         public void ChangeDB(EFContext context, JObject jsonFile, List<int> ids)
         {
-            if (jsonFile["artists"] is null)
+            if (jsonFile["thumbalbums"] is null)
             {
                 if (Successor != null)
                     Successor.ChangeDB(context, jsonFile, ids);
@@ -29,16 +29,15 @@ namespace SLB_REST.Helpers.DataBaseStrategy.ChainRespEditDB
             {
                 try
                 {
-
                     var album = context.Albums
                         .Include(a => a.AlbumThumb)
                         .Where(a => a.ID == ids[0])
                         .SingleOrDefault();
 
-                    album.AlbumThumb.ImageThumbSrc = jsonFile["thumbalbum"]["srcImage"].ToString();
-                    album.AlbumThumb.ArtistName = jsonFile["thumbalbum"]["artistName"].ToString();
-                    album.AlbumThumb.Genres = jsonFile["thumbalbum"]["genre"].ToString();
-                    album.AlbumThumb.Style = jsonFile["thumbalbum"]["style"].ToString();
+                    album.AlbumThumb.ImageThumbSrc = jsonFile["thumbalbums"][0]["srcImage"].ToString();
+                    album.AlbumThumb.ArtistName = jsonFile["thumbalbums"][0]["artistName"].ToString();
+                    album.AlbumThumb.Genres = jsonFile["thumbalbums"][0]["genre"].ToString();
+                    album.AlbumThumb.Style = jsonFile["thumbalbums"][0]["style"].ToString();
 
                     context.Albums.Update(album);
                     context.SaveChanges();
