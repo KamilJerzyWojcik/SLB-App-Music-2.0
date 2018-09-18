@@ -35,25 +35,21 @@ namespace SLB_REST.Helpers.DataBaseStrategy.ChainRespEditDB
                         .Include(a => a.Images)
                         .SingleOrDefault();
 
-                    List<ImageModel> images = new List<ImageModel>();
-                    foreach (var image in jsonFile["images"])
-                        images.Add(new ImageModel() { Uri = image["uri"].ToString() });
+                    if (ids.Count == 1)
+                        album.Images.Add(new ImageModel() { Uri = jsonFile["images"][0].ToString() });
 
-                    album.Images = images;
+                    if (ids.Count == 2)
+                    {
+                        int i = 0;
+                        foreach (var img in album.Images)
+                        {
+                            if (i == ids[1]) img.Uri = jsonFile["images"][0].ToString();
+                            i++;
+                        }
+                    }
+
                     context.Albums.Update(album);
                     context.SaveChanges();
-
-                    var old = context
-                        .Images
-                        .Include(g => g.Album)
-                        .Where(g => g.Album.ID == null)
-                        .ToList();
-
-                    foreach (var o in old)
-                    {
-                        context.Images.Remove(o);
-                        context.SaveChanges();
-                    }
 
                     if (Successor != null)
                         Successor.ChangeDB(context, jsonFile, ids);
@@ -67,6 +63,6 @@ namespace SLB_REST.Helpers.DataBaseStrategy.ChainRespEditDB
 
         }
 
-        
+
     }
 }

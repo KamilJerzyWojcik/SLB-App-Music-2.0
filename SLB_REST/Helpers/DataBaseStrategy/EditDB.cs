@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using SLB_REST.Context;
+using SLB_REST.Helpers.DataBaseStrategy.ChainRespEditDB;
+using SLB_REST.Helpers.DataBaseStrategy.DBChainResp;
 
 namespace SLB_REST.Helpers.DataBaseStrategy
 {
@@ -19,9 +21,32 @@ namespace SLB_REST.Helpers.DataBaseStrategy
             return this;
         }
 
-        public void SaveChanges(EFContext EFcontext)
+        public void SaveChanges(EFContext _context)
         {
-            throw new NotImplementedException();
+            List<int> ids = new List<int>() { int.Parse(JsonFile["id"].ToString()) };
+
+            if (!(JsonFile["idOnList"] is null))
+                ids.Add(int.Parse(JsonFile["idOnList"].ToString()));
+
+            IChainChange editAlbumThumb = new ChainEditAlbumThumb();
+
+            IChainChange editStyles = new ChainEditStyles();
+            editStyles.SetSuccessor(editAlbumThumb);
+
+            IChainChange editGenres = new ChainEditGenres();
+            editGenres.SetSuccessor(editStyles);
+
+            IChainChange editArtists = new ChainEditArtists();
+            editArtists.SetSuccessor(editGenres);
+
+            IChainChange editImages = new ChainEditImages();
+            editImages.SetSuccessor(editArtists);
+
+            IChainChange editVideos = new ChainEditVideos();
+            editVideos.SetSuccessor(editImages);
+
+
+            editVideos.ChangeDB(_context, JsonFile, ids);
         }
     }
 }

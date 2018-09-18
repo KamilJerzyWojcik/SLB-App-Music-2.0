@@ -38,7 +38,7 @@ namespace SLB_REST.Helpers.DataBaseStrategy.ChainRespEditDB
 
                     List<StyleModel> styles = new List<StyleModel>();
                     foreach (var style in jsonFile["styles"])
-                        styles.Add(new StyleModel() { Style = style.ToString() });
+                        styles.Add(new StyleModel() { Style = style.ToString().Trim() });
 
                     album.Styles = styles;
                     context.Albums.Update(album);

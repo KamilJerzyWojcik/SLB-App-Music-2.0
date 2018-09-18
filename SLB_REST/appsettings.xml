@@ -1,4 +1,4 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <root>
-  <connectionString></connectionString>
+  <connectionString>Server=tcp:slb-muesic-server.database.windows.net,1433;Initial Catalog=SLB-musci-databse;Persist Security Info=False;User ID=kamil.jerzy.wojcik;Password=Sony20044$;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;</connectionString>
 </root>

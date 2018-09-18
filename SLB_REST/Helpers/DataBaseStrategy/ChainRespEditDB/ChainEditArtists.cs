@@ -37,7 +37,7 @@ namespace SLB_REST.Helpers.DataBaseStrategy.ChainRespEditDB
 
                     List<ArtistModel> artists = new List<ArtistModel>();
                     foreach (var artist in jsonFile["artists"])
-                        artists.Add(new ArtistModel() { Name = artist["name"].ToString() });
+                        artists.Add(new ArtistModel() { Name = artist.ToString().Trim() });
 
                     album.Artists = artists;
                     context.Albums.Update(album);

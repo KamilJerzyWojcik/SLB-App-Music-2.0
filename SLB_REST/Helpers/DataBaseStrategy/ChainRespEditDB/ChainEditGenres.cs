@@ -37,7 +37,7 @@ namespace SLB_REST.Helpers.DataBaseStrategy.ChainRespEditDB
 
                     List<GenreModel> genres = new List<GenreModel>();
                     foreach (var genre in jsonFile["genres"])
-                        genres.Add(new GenreModel() { Genre = genre.ToString() });
+                        genres.Add(new GenreModel() { Genre = genre.ToString().Trim() });
 
                     album.Genres = genres;
                     context.Albums.Update(album);
