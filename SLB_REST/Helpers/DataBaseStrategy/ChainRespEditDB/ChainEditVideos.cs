@@ -35,29 +35,31 @@ namespace SLB_REST.Helpers.DataBaseStrategy.ChainRespEditDB
                         .Include(a => a.Videos)
                         .SingleOrDefault();
 
-                    List<VideoModel> videos = new List<VideoModel>();
-                    foreach (var video in jsonFile["videos"])
-                        videos.Add(new VideoModel()
+                    if (ids.Count == 1)
+                    {
+                        album.Videos.Add(new VideoModel()
                         {
-                            Uri = video["uri"].ToString(),
-                            Description = video["description"].ToString(),
+                            Description = jsonFile["videos"][0]["description"].ToString(),
+                            Uri = jsonFile["videos"][0]["source"].ToString()
                         });
+                    }
 
-                    album.Videos = videos;
+                    if (ids.Count == 2)
+                    {
+                        int i = 0;
+                        foreach (var vid in album.Videos)
+                        {
+                            if (i == ids[1])
+                            {
+                                vid.Description = jsonFile["videos"][0]["description"].ToString();
+                                vid.Uri = jsonFile["videos"][0]["source"].ToString();
+                            }
+                            i++;
+                        }
+                    }
+
                     context.Albums.Update(album);
                     context.SaveChanges();
-
-                    var old = context
-                        .Videos
-                        .Include(g => g.Album)
-                        .Where(g => g.Album.ID == null)
-                        .ToList();
-
-                    foreach (var o in old)
-                    {
-                        context.Videos.Remove(o);
-                        context.SaveChanges();
-                    }
 
                     if (Successor != null)
                         Successor.ChangeDB(context, jsonFile, ids);
@@ -69,7 +71,5 @@ namespace SLB_REST.Helpers.DataBaseStrategy.ChainRespEditDB
                 }
             }
         }
-
-
     }
 }

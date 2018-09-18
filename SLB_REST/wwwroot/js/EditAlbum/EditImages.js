@@ -138,7 +138,7 @@ function addTdButtonsNewImage(trBody, editImage, id) {
 	trBody.appendChild(tdBody3);
 }
 
-function setImage(editImage, id) {//dodawanie obrazu
+function setImage(editImage, id) {
 
 	var album = function (images, id) {
 		this.images = images,

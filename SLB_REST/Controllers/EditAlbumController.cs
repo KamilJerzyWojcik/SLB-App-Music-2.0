@@ -60,31 +60,17 @@ namespace SLB_REST.Controllers
         }
 
         [HttpGet]
-        public IActionResult Genres(int id)
+        public IActionResult Genres(int id, string type = "genres")
         {
-            var albumWithGenres = _context.Albums.Where(a => a.ID == id).Include(a => a.Genres).SingleOrDefault();
-            var genView = _sourceManagerViewData.Load(albumWithGenres).GetViewGenres();
+            if (type == "genres")
+            {
+                var albumWithGenres = _context.Albums.Where(a => a.ID == id).Include(a => a.Genres).SingleOrDefault();
+                var result = _sourceManagerViewData.Load(albumWithGenres).GetViewGenres();
+                return Json(result);
+            }
 
-            return Json(genView);
+            return StatusCode(404);
         }
-
-        //[HttpPost]
-        //public IActionResult Styles(string styles, int id)
-        //{
-        //    var albumWithStyles = _context.Albums
-        //    .Where(a => a.ID == id)
-        //    .Include(a => a.Styles).SingleOrDefault();
-
-        //    albumWithStyles.Styles = _sourceManagerDeleteAlbum.GetTrimedStyles(styles);
-
-        //    _context.Albums.Update(albumWithStyles);
-        //    _context.SaveChanges();
-
-        //    _sourceManagerDeleteAlbum.DeleteOldStyles();
-
-        //    var styView = _sourceManagerViewData.Load(albumWithStyles).GetViewStyles();
-        //    return Json(styView);
-        //}
 
         [HttpGet]
         public IActionResult Styles(int id)
@@ -94,25 +80,6 @@ namespace SLB_REST.Controllers
 
             return Json(styView);
         }
-
-        //[HttpPost]
-        //public IActionResult Artists(string artists, int id)
-        //{
-        //    var albumWithArtists = _context.Albums
-        //    .Where(a => a.ID == id)
-        //    .Include(a => a.Artists).SingleOrDefault();
-
-        //    albumWithArtists.Artists = _sourceManagerDeleteAlbum.GetTrimedArtists(artists);
-
-        //    _context.Albums.Update(albumWithArtists);
-        //    _context.SaveChanges();
-
-        //    _sourceManagerDeleteAlbum.DeleteOldArtists();
-
-        //    var artView = _sourceManagerViewData.Load(albumWithArtists).GetViewArtists();
-
-        //    return Json(artView);
-        //}
 
         [HttpGet]
         public IActionResult Artists(int id)
@@ -131,47 +98,6 @@ namespace SLB_REST.Controllers
 
             return Json(imgView);
         }
-
-        //[HttpPost]
-        //public IActionResult AddImage(string image, int id)
-        //{
-        //    ImageModel imgCont = _context.Images
-        //    .Include(im => im.Album)
-        //    .Where(im => im.Album.ID == id && im.Uri == image)
-        //    .SingleOrDefault();
-
-        //    if (imgCont == null)
-        //    {
-        //        AlbumModel albumWithImages = _context.Albums
-        //        .Where(a => a.ID == id)
-        //        .Include(a => a.Images)
-        //        .SingleOrDefault();
-
-        //        albumWithImages = _sourceManagerDeleteAlbum.AddImageToModel(albumWithImages, image);
-
-        //        _context.Albums.Update(albumWithImages);
-        //        _context.SaveChanges();
-
-        //        return StatusCode(200);
-        //    }
-
-        //    return StatusCode(406);
-        //}
-
-        //[HttpPost]
-        //public IActionResult EditImage(string image, int idList, int id)
-        //{
-        //    AlbumModel albumWithImages = _context.Albums
-        //    .Where(a => a.ID == id)
-        //    .Include(a => a.Images).SingleOrDefault();
-
-        //    albumWithImages = _sourceManagerDeleteAlbum.AddImageToEdit(albumWithImages, idList, image);
-
-        //    _context.Albums.Update(albumWithImages);
-        //    _context.SaveChanges();
-
-        //    return Ok();
-        //}
 
         [HttpPost]
         public IActionResult DeleteImage(int idList, int id)
@@ -204,33 +130,6 @@ namespace SLB_REST.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddVideos(string description, string source, int id)
-        {
-            var videoCont = _context.Videos
-            .Include(im => im.Album)
-            .Where(im => im.Album.ID == id && im.Uri == source)
-            .SingleOrDefault();
-
-            if (videoCont == null)
-            {
-                AlbumModel albumWithVideos = _context.Albums
-                .Where(a => a.ID == id)
-                .Include(a => a.Videos)
-                .SingleOrDefault();
-
-                albumWithVideos = _sourceManagerDeleteAlbum.AddVideo(albumWithVideos, description, source);
-
-                _context.Albums.Update(albumWithVideos);
-                _context.SaveChanges();
-
-                return StatusCode(200);
-
-            }
-
-            return StatusCode(404);
-        }
-
-        [HttpPost]
         public IActionResult DeleteVideo(int id, int idList)
         {
             var albumWithVideos = _context.Albums
@@ -246,22 +145,6 @@ namespace SLB_REST.Controllers
             .SingleOrDefault();
 
             _context.Videos.Remove(videoCont);
-            _context.SaveChanges();
-
-            return Ok();
-        }
-
-        [HttpPost]
-        public IActionResult EditVideo(string description, string source, int idList, int id)
-        {
-            AlbumModel albumWithVideos = _context.Albums
-            .Where(a => a.ID == id)
-            .Include(a => a.Videos)
-            .SingleOrDefault();
-
-            albumWithVideos = _sourceManagerDeleteAlbum.EditVideoUri(albumWithVideos, description, source, idList);
-
-            _context.Albums.Update(albumWithVideos);
             _context.SaveChanges();
 
             return Ok();
