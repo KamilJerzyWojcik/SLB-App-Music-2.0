@@ -10,28 +10,23 @@ using SLB_REST.Context;
 using SLB_REST.Helpers;
 using SLB_REST.Helpers.DataBaseStrategy;
 using SLB_REST.Models;
+using SLB_REST.Models.AlbumDiscogs.Interfaces;
 
 namespace SLB_REST.Controllers
 {
     public class EditAlbumController : Controller
     {
         private readonly EFContext _context;
-        private SourceManagerEF _sourceManagerEF;
-        private SourceManagerViewData _sourceManagerViewData;
         private SourceManagerDeleteAlbum _sourceManagerDeleteAlbum;
         private DatabaseStrategy _databaseStrategy;
 
 
         public EditAlbumController(
-            SourceManagerEF sourceManagerEF,
             EFContext context,
-            SourceManagerViewData sourceManagerViewData,
             SourceManagerDeleteAlbum sourceManagerDeleteAlbum,
             DatabaseStrategy databaseStrategy)
         {
             _context = context;
-            _sourceManagerEF = sourceManagerEF;
-            _sourceManagerViewData = sourceManagerViewData;
             _sourceManagerDeleteAlbum = sourceManagerDeleteAlbum;
             _databaseStrategy = databaseStrategy;
         }
@@ -60,43 +55,87 @@ namespace SLB_REST.Controllers
         }
 
         [HttpGet]
-        public IActionResult Genres(int id, string type = "genres")
+        public IActionResult Get(int id, string type)
         {
-            if (type == "genres")
+
+            if (type == "genre")
             {
-                var albumWithGenres = _context.Albums.Where(a => a.ID == id).Include(a => a.Genres).SingleOrDefault();
-                var result = _sourceManagerViewData.Load(albumWithGenres).GetViewGenres();
-                return Json(result);
+                var genres = _context
+                    .Genres
+                    .Include(g => g.Album)
+                    .Where(g => g.Album.ID == id)
+                    .Select(g => g.Genre)
+                    .ToList();
+                return Json(genres);
+            }
+
+            if (type == "albumThumb")
+            {
+                var albumThumb = _context
+                    .AlbumsThumb
+                    .Include(a => a.Album)
+                    .Where(a => a.Album.ID == id)
+                    .Select(a => new
+                    {
+                        a.ImageThumbSrc,
+                        a.Title,
+                        a.Style,
+                        a.Genres,
+                        a.ArtistName   
+                    })
+                    .SingleOrDefault();
+
+                return Json(albumThumb);
+            }
+
+            if (type == "style")
+            {
+                var styles = _context
+                    .Styles
+                    .Include(g => g.Album)
+                    .Where(g => g.Album.ID == id)
+                    .Select(g => g.Style)
+                    .ToList();
+                return Json(styles);
+            }
+
+            if (type == "artist")
+            {
+                var artists = _context
+                    .Artists
+                    .Include(g => g.Album)
+                    .Where(g => g.Album.ID == id)
+                    .Select(g => g.Name)
+                    .ToList();
+                return Json(artists);
+            }
+
+            if (type == "image")
+            {
+                var images = _context
+                .Images
+                .Include(i => i.Album)
+                .Where(i => i.Album.ID == id)
+                .Select(i => i.Uri)
+                .ToList();
+                return Json(images);
+            }
+
+            if (type == "video")
+            {
+                var videos = _context
+                .Videos
+                .Include(v => v.Album)
+                .Where(v => v.Album.ID == id)
+                .Select(v => new {
+                    v.Uri,
+                    v.Description
+                })
+                .ToList();
+                return Json(videos);
             }
 
             return StatusCode(404);
-        }
-
-        [HttpGet]
-        public IActionResult Styles(int id)
-        {
-            var albumWithStyles = _context.Albums.Where(a => a.ID == id).Include(a => a.Styles).SingleOrDefault();
-            var styView = _sourceManagerViewData.Load(albumWithStyles).GetViewStyles();
-
-            return Json(styView);
-        }
-
-        [HttpGet]
-        public IActionResult Artists(int id)
-        {
-            var albumWithArtists = _context.Albums.Where(a => a.ID == id).Include(a => a.Artists).SingleOrDefault();
-            var artView = _sourceManagerViewData.Load(albumWithArtists).GetViewArtists();
-
-            return Json(artView);
-        }
-
-        [HttpGet]
-        public IActionResult Images(int id)
-        {
-            var albumWithImages = _context.Albums.Where(a => a.ID == id).Include(a => a.Images).SingleOrDefault();
-            var imgView = _sourceManagerViewData.Load(albumWithImages).GetViewImages();
-
-            return Json(imgView);
         }
 
         [HttpPost]
@@ -120,15 +159,6 @@ namespace SLB_REST.Controllers
             return Ok();
         }
 
-        [HttpGet]
-        public IActionResult Videos(int id)
-        {
-            var albumWithVideos = _context.Albums.Where(a => a.ID == id).Include(a => a.Videos).SingleOrDefault();
-            var videoView = _sourceManagerViewData.Load(albumWithVideos).GetViewVideos();
-
-            return Json(videoView);
-        }
-
         [HttpPost]
         public IActionResult DeleteVideo(int id, int idList)
         {
@@ -145,31 +175,6 @@ namespace SLB_REST.Controllers
             .SingleOrDefault();
 
             _context.Videos.Remove(videoCont);
-            _context.SaveChanges();
-
-            return Ok();
-        }
-
-        [HttpGet]
-        public IActionResult AlbumThumb(int id)
-        {
-            var albumWithAlbumThumb = _context.AlbumsThumb.Include(a => a.Album).Where(a => a.Album.ID == id).SingleOrDefault();
-            var thumbAlbumView = _sourceManagerViewData.Load(albumWithAlbumThumb).GetViewThumbAlbum();
-
-            return Json(thumbAlbumView);
-        }
-
-        [HttpPost]
-        public IActionResult EditAlbumThumb(string imgSrc, string artist, string genre, string style, int id)
-        {
-            var albumThumb = _context.AlbumsThumb
-            .Include(a => a.Album)
-            .Where(a => a.Album.ID == id)
-            .SingleOrDefault();
-
-            albumThumb = _sourceManagerDeleteAlbum.AddThumbData(albumThumb, new string[] { imgSrc, artist, genre, style });
-
-            _context.AlbumsThumb.Update(albumThumb);
             _context.SaveChanges();
 
             return Ok();

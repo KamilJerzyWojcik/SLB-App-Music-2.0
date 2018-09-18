@@ -33,9 +33,9 @@
 
 function getAlbumThumb(tbody, id) {
 	$.ajax({
-		url: `/EditAlbum/AlbumThumb`,
+		url: `/EditAlbum/Get`,
 		type: "Get",
-		data: { id: id },
+		data: { id: id, type: "albumThumb" },
 		dataType: "json"
 	}).done(function (result) {
 		addAlbumThumbInput(tbody, result);

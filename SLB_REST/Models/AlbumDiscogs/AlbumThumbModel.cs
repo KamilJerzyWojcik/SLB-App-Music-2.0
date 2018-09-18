@@ -6,12 +6,14 @@ using System.Threading.Tasks;
 
 namespace SLB_REST.Models
 {
-	public class AlbumThumbModel
-	{
-		public int ID { get; set; }
+    public class AlbumThumbModel
+    {
+        public int ID { get; set; }
 
-		[ForeignKey("UserID")]
-		public UserModel User { get; set; }
+        [ForeignKey("UserID")]
+        public UserModel User { get; set; }
+
+        //public int AlbumId {get; set;} dodać1!!
 
 		[ForeignKey("AlbumID")]
 		public AlbumModel Album { get; set; }

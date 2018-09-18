@@ -14,9 +14,9 @@
 
 function getVideos(id, table) {
 	$.ajax({
-		url: `/EditAlbum/Videos`,
+		url: `/EditAlbum/Get`,
 		type: "Get",
-		data: { id: id },
+		data: { id: id, type: "video" },
 		dataType: "json"
 	}).done(function (result) {
 		setBodyVideos(result, table);

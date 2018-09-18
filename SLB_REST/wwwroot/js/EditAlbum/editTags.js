@@ -50,11 +50,16 @@
 
 function getGenres(id, textarea, button) {
 	$.ajax({
-		url: `/EditAlbum/Genres`,
+		url: `/EditAlbum/Get`,
 		type: "Get",
-		data: { id: id },
+		data: { id: id, type: "genre" },
 		dataType: "json"
 	}).done(function (result) {
+
+
+		console.log(result);
+
+
 		genresInput(result, textarea);
 		button.addEventListener("click", function () {
 			if (textarea.value != "" && textarea.value != null)
@@ -68,9 +73,9 @@ function genresInput(genres, textarea) {
 	var data = "";
 
 	for (let i = 0; i < genres.length; i++) {
-		if (i == genres.length - 1) data += genres[i].genre;
+		if (i == genres.length - 1) data += genres[i];
 		else
-			data += genres[i].genre + ", ";
+			data += genres[i] + ", ";
 	}
 	textarea.value = data;
 }
@@ -101,9 +106,9 @@ function getStyles(id, textarea, button) {
 
 
 	$.ajax({
-		url: `/EditAlbum/Styles`,
+		url: `/EditAlbum/Get`,
 		type: "Get",
-		data: { id: id },
+		data: { id: id, type: "style" },
 		dataType: "json"
 	}).done(function (result) {
 		stylesInput(result, textarea);
@@ -119,9 +124,9 @@ function stylesInput(styles, textarea) {
 	var data = "";
 
 	for (let i = 0; i < styles.length; i++) {
-		if (i == styles.length - 1) data += styles[i].style;
+		if (i == styles.length - 1) data += styles[i];
 		else
-			data += styles[i].style + ", ";
+			data += styles[i] + ", ";
 	}
 	textarea.value = data;
 }
@@ -150,9 +155,9 @@ function updateStyles(id, newStyles) {
 
 function getArtists(id, textarea, button) {
 	$.ajax({
-		url: `/EditAlbum/Artists`,
+		url: `/EditAlbum/Get`,
 		type: "Get",
-		data: { id: id },
+		data: { id: id, type: "artist" },
 		dataType: "json"
 	}).done(function (result) {
 		artistsInput(result, textarea);
@@ -168,9 +173,9 @@ function artistsInput(artists, textarea) {
 	var data = "";
 
 	for (let i = 0; i < artists.length; i++) {
-		if (i == artists.length - 1) data += artists[i].name;
+		if (i == artists.length - 1) data += artists[i];
 		else
-			data += artists[i].name + ", ";
+			data += artists[i] + ", ";
 	}
 	textarea.value = data;
 }

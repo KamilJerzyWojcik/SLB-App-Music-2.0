@@ -18,9 +18,9 @@
 
 function getImages(tbody, id) {
 	$.ajax({
-		url: `/EditAlbum/Images`,
+		url: `/EditAlbum/Get`,
 		type: "Get",
-		data: { id: id },
+		data: { id: id, type: "image" },
 		dataType: "json"
 	}).done(function (result) {
 		setBodyImages(result, tbody);
@@ -211,7 +211,7 @@ function addThBodyImage(i, trBody) {
 function addTdBodySrcImage(i, images, trBody) {
 	var tdBody1 = document.createElement("td");
 	var img = document.createElement("img");
-	img.setAttribute("src", images[i].uri)
+	img.setAttribute("src", images[i])
 	img.setAttribute("width", "100px");
 	img.setAttribute("height", "100px");
 
@@ -225,7 +225,7 @@ function addTdBodyInputImage(i, images, trBody) {
 	var tdBody2 = document.createElement("td");
 	var input = document.createElement("input");
 	input.classList.add("form-control");
-	input.value = images[i].uri;
+	input.value = images[i];
 	tdBody2.appendChild(input);
 	trBody.appendChild(tdBody2);
 }
