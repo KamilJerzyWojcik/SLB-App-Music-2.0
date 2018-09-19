@@ -32,10 +32,17 @@
 }
 
 function getAlbumThumb(tbody, id) {
+
+	var album = function (thumbAlbum) {
+		this.thumbAlbum = thumbAlbum;
+	}
+	var getAlbum = new album("?");
+	var data = JSON.stringify(getAlbum);
+
 	$.ajax({
 		url: `/EditAlbum/Get`,
 		type: "Get",
-		data: { id: id, type: "albumThumb" },
+		data: { id: id, type: data },
 		dataType: "json"
 	}).done(function (result) {
 		addAlbumThumbInput(tbody, result);
@@ -43,11 +50,11 @@ function getAlbumThumb(tbody, id) {
 	})
 }
 
-function addAlbumThumbInput(tbody, albumThumb) {
-	var trThumbImage = addTrThumbImage(albumThumb);
-	var trArtst = addTrArtist(albumThumb);
-	var trGenre = addTrGenre(albumThumb);
-	var trStyle = addTrStyle(albumThumb);
+function addAlbumThumbInput(tbody, album) {
+	var trThumbImage = addTrThumbImage(album.albumThumb);
+	var trArtst = addTrArtist(album.albumThumb);
+	var trGenre = addTrGenre(album.albumThumb);
+	var trStyle = addTrStyle(album.albumThumb);
 
 	tbody.appendChild(trThumbImage);
 	tbody.appendChild(trArtst);

@@ -6,11 +6,15 @@
 
 function getAlbums(page) {
     $.ajax({
-        url: `/Home/GetThumbAlbum?page=${page}`,
+        url: `/Home/GetThumbAlbum`,
         type: "GET",
-        dataType: "json"
-    }).done(function (result) {
-        showThumbAlbums(result, page);
+		dataType: "json",
+		data: {page: page}
+	}).done(function (result) {
+
+		console.log(result);
+
+		showThumbAlbums(result, page);
         addPaginationSlb(page);
     }).fail(function (e) {
     })
@@ -84,7 +88,7 @@ function showThumbAlbums(albums, page) {
     var row = document.getElementById("albums-slb");
     row.innerHTML = "";
 
-    for (let i = 0; i < albums.length; i++) {
+    for (let i = 0; i < albums.thumbAlbums.length; i++) {
         var divCol = document.createElement("div");
         divCol.classList.add("col-sm-12");
         divCol.classList.add("col-md-6");
@@ -99,8 +103,8 @@ function showThumbAlbums(albums, page) {
 
         var cardImg = document.createElement("img");
         cardImg.classList.add("card-img-top");
-        cardImg.setAttribute("src", albums[i].imageThumbSrc);
-        cardImg.setAttribute("alt", `thumb album ${albums[i].title} image`);
+		cardImg.setAttribute("src", albums.thumbAlbums[i].imageThumbSrc);
+		cardImg.setAttribute("alt", `thumb album ${albums.thumbAlbums[i].title} image`);
         cardImg.classList.add("img-responsive");
         cardImg.style.height = "20rem";
 
@@ -113,22 +117,22 @@ function showThumbAlbums(albums, page) {
         var parName = document.createElement("p");
         parName.classList.add("card-text");
         parName.classList.add("h3");
-        parName.innerText = albums[i].artistName;
+		parName.innerText = albums.thumbAlbums[i].artistName;
         divCardBody.appendChild(parName);
 
         var parTitle = document.createElement("p");
         parTitle.classList.add("card-text");
-        parTitle.innerText = albums[i].title;
+		parTitle.innerText = albums.thumbAlbums[i].title;
         divCardBody.appendChild(parTitle);
 
         var parStyle = document.createElement("p");
         parStyle.classList.add("card-text");
-        parStyle.innerText = albums[i].style;
+		parStyle.innerText = albums.thumbAlbums[i].style;
         divCardBody.appendChild(parStyle);
 
         var parGenres = document.createElement("p");
         parGenres.classList.add("card-text");
-        parGenres.innerText = albums[i].genres;
+		parGenres.innerText = albums.thumbAlbums[i].genres;
         divCardBody.appendChild(parGenres);
 
         var divContent = document.createElement("div");
@@ -149,7 +153,7 @@ function showThumbAlbums(albums, page) {
         aView.setAttribute("href", "#");
         aView.addEventListener("click", function () {
             $("#confirm").remove();
-            showAlbum(albums[i].albumId, page);
+            showAlbum(albums.id[i], page);
         });
         divBtns.appendChild(aView);
 
@@ -159,7 +163,7 @@ function showThumbAlbums(albums, page) {
         aEdit.classList.add("btn-outline-secondary");
         aEdit.setAttribute("type", "button");
         aEdit.innerText = "Edit";
-        aEdit.setAttribute("href", `/EditAlbum/Edit?id=${albums[i].albumId}`);
+        aEdit.setAttribute("href", `/EditAlbum/Edit?id=${albums.id[i]}`);
 
         divBtns.appendChild(aEdit);
 

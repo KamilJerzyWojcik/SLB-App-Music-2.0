@@ -17,13 +17,21 @@
 }
 
 function getImages(tbody, id) {
+
+
+	var album = function (images) {
+		this.images = images;
+	}
+	var getAlbum = new album("?");
+	var data = JSON.stringify(getAlbum);
+
 	$.ajax({
 		url: `/EditAlbum/Get`,
 		type: "Get",
-		data: { id: id, type: "image" },
+		data: { id: id, type: data },
 		dataType: "json"
 	}).done(function (result) {
-		setBodyImages(result, tbody);
+		setBodyImages(result.images, tbody);
 	}).fail(function (e) {
 	})
 }

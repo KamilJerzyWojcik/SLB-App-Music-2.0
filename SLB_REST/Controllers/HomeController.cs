@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -22,12 +23,10 @@ namespace SLB_REST.Controllers
     public class HomeController : Controller
     {
         private readonly EFContext _context;
-        private readonly SourceManagerViewData _sourceManagerViewData;
 
-        public HomeController(EFContext context, SourceManagerViewData sourceManagerViewData)
+        public HomeController(EFContext context)
         {
             _context = context;
-            _sourceManagerViewData = sourceManagerViewData;
         }
 
         public IActionResult Albums(string titleDelete = "", int idDelete = 0)
@@ -51,51 +50,180 @@ namespace SLB_REST.Controllers
 
         public IActionResult GetThumbAlbum(int page, int id = -1)
         {
-
             if (id == -1)
             {
-                var albums = _context.AlbumsThumb.Include(t => t.User).Where(t => t.User.UserName == User.Identity.Name).Include(t => t.Album).Skip(page * 6).Take(6).ToList();
+                dynamic albums = new ExpandoObject();
 
-                var json = new List<AlbumsThumbViewModel>();
-                int count = albums.Count > 6 ? 6 : albums.Count;
+                albums.thumbAlbums = _context
+                    .AlbumsThumb
+                    .Include(t => t.User)
+                    .Where(t => t.User.UserName == User.Identity.Name)
+                    .Include(t => t.Album)
+                    .Skip(page * 6).Take(6)
+                    .Select(a => new {
+                        a.ImageThumbSrc,
+                        a.Title,
+                        a.Style,
+                        a.Genres,
+                        a.ArtistName
+                    })
+                    .ToList();
 
-                for (int i = 0; i < count; i++)
-                {
-                    var item = _sourceManagerViewData.Load(albums[i]).GetViewThumbAlbum();
-                    json.Add(item);
-                }
-                return Json(json);
+                albums.id = _context
+                    .AlbumsThumb
+                    .Include(t => t.User)
+                    .Where(t => t.User.UserName == User.Identity.Name)
+                    .Include(t => t.Album)
+                    .Skip(page * 6).Take(6)
+                    .Select(a => a.Album.ID)
+                    .ToList();
+
+                return Json(albums);
             }
             else
             {
-                var album = _context.AlbumsThumb.Include(a => a.Album).Where(a => a.Album.ID == id).Single();
-                var json = _sourceManagerViewData.Load(album).GetViewThumbAlbum();
-                return Json(json);
+                dynamic album = new ExpandoObject();
+                album.albumThumb = _context
+                    .AlbumsThumb
+                    .Include(a => a.Album)
+                    .Where(a => a.Album.ID == id)
+                    .Select(a => new
+                    {
+                        a.ImageThumbSrc,
+                        a.Title,
+                        a.Style,
+                        a.Genres,
+                        a.ArtistName
+                    })
+                    .SingleOrDefault();
+                return Json(album);
             }
         }
 
-        public IActionResult GetAlbumById(int albumId)
+        public IActionResult GetAlbumById(int id, string type)
         {
-            var album = _context.Albums.Where(a => a.ID == albumId)
-            .Include(a => a.Artists)
-            .Include(a => a.Genres)
-            .Include(a => a.Styles)
-            .Include(a => a.Videos)
-            .Include(a => a.Images)
-            .Include(a => a.Tracks)
-            .ThenInclude(t => t.ExtraArtists)
-            .SingleOrDefault();
 
-            AlbumViewModel albumView = new AlbumViewModel();
-            albumView.Title = album.Title;
-            albumView.Artists = _sourceManagerViewData.Load(album).GetViewArtists();
-            albumView.Genres = _sourceManagerViewData.GetViewGenres();
-            albumView.Styles = _sourceManagerViewData.GetViewStyles();
-            albumView.Videos = _sourceManagerViewData.GetViewVideos();
-            albumView.Images = _sourceManagerViewData.GetViewImages();
-            albumView.Tracks = _sourceManagerViewData.GetViewTracksAndExtraArtists();
+            JObject getData = JObject.Parse(type);
+            dynamic album = new ExpandoObject();
 
-            return Json(albumView);
+            if (!(getData["title"] is null))
+            {
+                album.title = _context
+                    .Albums
+                    .Where(g => g.ID == id)
+                    .Select(g => g.Title)
+                    .SingleOrDefault();
+            }
+
+            if (!(getData["genres"] is null))
+            {
+                album.genres = _context
+                    .Genres
+                    .Include(g => g.Album)
+                    .Where(g => g.Album.ID == id)
+                    .Select(g => new { g.Genre })
+                    .ToList();
+            }
+
+            if (!(getData["thumbAlbum"] is null))
+            {
+                album.albumThumb = _context
+                    .AlbumsThumb
+                    .Include(a => a.Album)
+                    .Where(a => a.Album.ID == id)
+                    .Select(a => new
+                    {
+                        a.ImageThumbSrc,
+                        a.Title,
+                        a.Style,
+                        a.Genres,
+                        a.ArtistName
+                    })
+                    .SingleOrDefault();
+            }
+
+            if (!(getData["styles"] is null))
+            {
+                album.styles = _context
+                    .Styles
+                    .Include(g => g.Album)
+                    .Where(g => g.Album.ID == id)
+                    .Select(g => new { g.Style })
+                    .ToList();
+            }
+
+            if (!(getData["artists"] is null))
+            {
+                album.artists = _context
+                    .Artists
+                    .Include(g => g.Album)
+                    .Where(g => g.Album.ID == id)
+                    .Select(g => new
+                    {
+                        g.Name
+                    })
+                    .ToList();
+            }
+
+            if (!(getData["images"] is null))
+            {
+                album.images = _context
+                .Images
+                .Include(i => i.Album)
+                .Where(i => i.Album.ID == id)
+                .Select(i => i.Uri)
+                .ToList();
+            }
+
+            if (!(getData["videos"] is null))
+            {
+                album.videos = _context
+                .Videos
+                .Include(v => v.Album)
+                .Where(v => v.Album.ID == id)
+                .Select(v => new
+                {
+                    v.Uri,
+                    v.Description
+                })
+                .ToList();
+            }
+
+            if (!(getData["tracks"] is null))
+            {
+                album.tracks = _context
+                .Tracks
+                .Include(v => v.Album)
+                .Where(v => v.Album.ID == id)
+                .Select(t => new
+                {
+                    t.Duration,
+                    t.Position,
+                    t.Title,
+                    t.ID
+                })
+                .ToList();
+
+            }
+
+            if (!(getData["extraartists"] is null))
+            {
+                album.extraArtists = new List<dynamic>();
+
+                foreach (var track in album.tracks)
+                {
+                    int i = track.ID;
+
+                    album.extraArtists.Add(_context
+                    .ExtraArtists
+                    .Include(v => v.Track)
+                    .Where(v => v.Track.ID == i)
+                    .Select(t => new { t.Name })
+                    .ToList());
+                }
+            }
+            //album.extraArtists = new List<dynamic>();
+            return Json(album);
         }
 
     }

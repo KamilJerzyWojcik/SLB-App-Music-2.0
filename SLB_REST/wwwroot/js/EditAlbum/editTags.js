@@ -49,17 +49,19 @@
 
 
 function getGenres(id, textarea, button) {
+
+	var album = function (genres) {
+		this.genres = genres;
+	}
+	var getAlbum = new album("?");
+	var data = JSON.stringify(getAlbum);
+
 	$.ajax({
 		url: `/EditAlbum/Get`,
 		type: "Get",
-		data: { id: id, type: "genre" },
+		data: { id: id, type: data },
 		dataType: "json"
 	}).done(function (result) {
-
-
-		console.log(result);
-
-
 		genresInput(result, textarea);
 		button.addEventListener("click", function () {
 			if (textarea.value != "" && textarea.value != null)
@@ -69,13 +71,13 @@ function getGenres(id, textarea, button) {
 	})
 }
 
-function genresInput(genres, textarea) {
+function genresInput(album, textarea) {
 	var data = "";
 
-	for (let i = 0; i < genres.length; i++) {
-		if (i == genres.length - 1) data += genres[i];
+	for (let i = 0; i < album.genres.length; i++) {
+		if (i == album.genres.length - 1) data += album.genres[i].genre;
 		else
-			data += genres[i] + ", ";
+			data += album.genres[i].genre + ", ";
 	}
 	textarea.value = data;
 }
@@ -104,11 +106,16 @@ function updateGenres(id, newGenres) {
 
 function getStyles(id, textarea, button) {
 
+	var album = function (styles) {
+		this.styles = styles;
+	}
+	var getAlbum = new album("?");
+	var data = JSON.stringify(getAlbum);
 
 	$.ajax({
 		url: `/EditAlbum/Get`,
 		type: "Get",
-		data: { id: id, type: "style" },
+		data: { id: id, type: data },
 		dataType: "json"
 	}).done(function (result) {
 		stylesInput(result, textarea);
@@ -120,13 +127,13 @@ function getStyles(id, textarea, button) {
 	})
 }
 
-function stylesInput(styles, textarea) {
+function stylesInput(album, textarea) {
 	var data = "";
 
-	for (let i = 0; i < styles.length; i++) {
-		if (i == styles.length - 1) data += styles[i];
+	for (let i = 0; i < album.styles.length; i++) {
+		if (i == album.styles.length - 1) data += album.styles[i].style;
 		else
-			data += styles[i] + ", ";
+			data += album.styles[i].style + ", ";
 	}
 	textarea.value = data;
 }
@@ -135,7 +142,7 @@ function updateStyles(id, newStyles) {
 
 	var album = function (styles, id) {
 		this.styles = styles,
-		this.id = id;
+			this.id = id;
 	};
 	newStyles = newStyles.split(",");
 	var data = new album(newStyles, id);
@@ -154,10 +161,17 @@ function updateStyles(id, newStyles) {
 
 
 function getArtists(id, textarea, button) {
+
+	var album = function (artists) {
+		this.artists = artists;
+	}
+	var getAlbum = new album("?");
+	var data = JSON.stringify(getAlbum);
+
 	$.ajax({
 		url: `/EditAlbum/Get`,
 		type: "Get",
-		data: { id: id, type: "artist" },
+		data: { id: id, type: data },
 		dataType: "json"
 	}).done(function (result) {
 		artistsInput(result, textarea);
@@ -169,13 +183,13 @@ function getArtists(id, textarea, button) {
 	})
 }
 
-function artistsInput(artists, textarea) {
+function artistsInput(album, textarea) {
 	var data = "";
 
-	for (let i = 0; i < artists.length; i++) {
-		if (i == artists.length - 1) data += artists[i];
+	for (let i = 0; i < album.artists.length; i++) {
+		if (i == album.artists.length - 1) data += album.artists[i].name;
 		else
-			data += artists[i] + ", ";
+			data += album.artists[i].name + ", ";
 	}
 	textarea.value = data;
 }

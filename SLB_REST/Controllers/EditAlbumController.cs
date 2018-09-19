@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Transactions;
@@ -54,24 +55,25 @@ namespace SLB_REST.Controllers
             return Ok();
         }
 
-        [HttpGet]
+        [HttpGet]//w JS obiekt steruje AJAXem, jaki obiekt takie dane
         public IActionResult Get(int id, string type)
         {
+            JObject getData = JObject.Parse(type);
+            dynamic album = new ExpandoObject();
 
-            if (type == "genre")
+            if (!(getData["genres"] is null))
             {
-                var genres = _context
+                album.genres = _context
                     .Genres
                     .Include(g => g.Album)
                     .Where(g => g.Album.ID == id)
-                    .Select(g => g.Genre)
+                    .Select(g => new { g.Genre })
                     .ToList();
-                return Json(genres);
             }
 
-            if (type == "albumThumb")
+            if (!(getData["thumbAlbum"] is null))
             {
-                var albumThumb = _context
+                album.albumThumb = _context
                     .AlbumsThumb
                     .Include(a => a.Album)
                     .Where(a => a.Album.ID == id)
@@ -81,61 +83,59 @@ namespace SLB_REST.Controllers
                         a.Title,
                         a.Style,
                         a.Genres,
-                        a.ArtistName   
+                        a.ArtistName
                     })
                     .SingleOrDefault();
-
-                return Json(albumThumb);
             }
 
-            if (type == "style")
+            if (!(getData["styles"] is null))
             {
-                var styles = _context
+                album.styles = _context
                     .Styles
                     .Include(g => g.Album)
                     .Where(g => g.Album.ID == id)
-                    .Select(g => g.Style)
+                    .Select(g => new { g.Style })
                     .ToList();
-                return Json(styles);
             }
 
-            if (type == "artist")
+            if (!(getData["artists"] is null))
             {
-                var artists = _context
+                album.artists = _context
                     .Artists
                     .Include(g => g.Album)
                     .Where(g => g.Album.ID == id)
-                    .Select(g => g.Name)
+                    .Select(g => new
+                    {
+                        g.Name
+                    })
                     .ToList();
-                return Json(artists);
             }
 
-            if (type == "image")
+            if (!(getData["images"] is null))
             {
-                var images = _context
+                album.images = _context
                 .Images
                 .Include(i => i.Album)
                 .Where(i => i.Album.ID == id)
                 .Select(i => i.Uri)
                 .ToList();
-                return Json(images);
             }
 
-            if (type == "video")
+            if (!(getData["videos"] is null))
             {
-                var videos = _context
+                album.videos = _context
                 .Videos
                 .Include(v => v.Album)
                 .Where(v => v.Album.ID == id)
-                .Select(v => new {
+                .Select(v => new
+                {
                     v.Uri,
                     v.Description
                 })
                 .ToList();
-                return Json(videos);
             }
 
-            return StatusCode(404);
+            return Json(album);
         }
 
         [HttpPost]

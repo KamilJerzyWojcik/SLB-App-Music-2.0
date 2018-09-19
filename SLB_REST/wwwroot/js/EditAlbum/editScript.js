@@ -1,9 +1,23 @@
 ﻿$(function () {
     var id = document.querySelector("main ul").getAttribute("id");
 
+	var album = function () { }
+	var getAlbum = new album();
+	getAlbum.title = "?";
+	getAlbum.styles = "?";
+	getAlbum.genres = "?";
+	getAlbum.images = "?";
+	getAlbum.videos = "?";
+	getAlbum.artists = "?";
+	getAlbum.tracks = "?";
+	getAlbum.extraartists = "?";
+
+	var data = JSON.stringify(getAlbum);
+
     $.ajax({
-        url: `/Home/GetAlbumById?albumId=${id}`,
-        type: "GET",
+        url: `/Home/GetAlbumById`,
+		type: "GET",
+		data: { id: id, type: data },
         dataType: "json"
     }).done(function (result) {
         addPagination(id);

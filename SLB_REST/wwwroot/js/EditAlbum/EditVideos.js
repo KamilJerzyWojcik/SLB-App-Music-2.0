@@ -13,13 +13,20 @@
 }
 
 function getVideos(id, table) {
+
+	var album = function (videos) {
+		this.videos = videos;
+	}
+	var getAlbum = new album("?");
+	var data = JSON.stringify(getAlbum);
+
 	$.ajax({
 		url: `/EditAlbum/Get`,
 		type: "Get",
-		data: { id: id, type: "video" },
+		data: { id: id, type: data },
 		dataType: "json"
 	}).done(function (result) {
-		setBodyVideos(result, table);
+		setBodyVideos(result.videos, table);
 	}).fail(function (e) {
 	})
 }
