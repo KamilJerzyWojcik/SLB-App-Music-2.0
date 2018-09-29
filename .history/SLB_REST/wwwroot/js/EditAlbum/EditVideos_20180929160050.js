@@ -21,14 +21,15 @@ function getVideos(id, table) {
 	var data = JSON.stringify(getAlbum);
 
 	$.ajax({
-		url: `/Home/GetAlbum`,
-		type: "Get",
-		data: { id: id, type: data },
-		dataType: "json"
-	}).done(function (result) {
-		setBodyVideos(result.videos, table);
-	}).fail(function (e) {
-	})
+    url: `/Home/GetAlbum`,
+    type: "Get",
+    data: { id: id, type: data },
+    dataType: "json"
+  })
+    .done(function(result) {
+      setBodyVideos(result.videos, table);
+    })
+    .fail(function(e) {});
 }
 
 function setBodyVideos(videos, table) {

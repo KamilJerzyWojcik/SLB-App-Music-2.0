@@ -40,7 +40,7 @@ function getAlbumThumb(tbody, id) {
 	var data = JSON.stringify(getAlbum);
 
 	$.ajax({
-		url: `/Home/GetAlbum`,
+		url: `/EditAlbum/Get`,
 		type: "Get",
 		data: { id: id, type: data },
 		dataType: "json"

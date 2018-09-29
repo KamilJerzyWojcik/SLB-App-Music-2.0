@@ -33,14 +33,14 @@
 
 function getAlbumThumb(tbody, id) {
 
-	var album = function () { }
-	var getAlbum = new album();
-	getAlbum.thumbAlbum = "?";
-
+	var album = function (thumbAlbum) {
+		this.thumbAlbum = thumbAlbum;
+	}
+	var getAlbum = new album("?");
 	var data = JSON.stringify(getAlbum);
 
 	$.ajax({
-		url: `/Home/GetAlbum`,
+		url: `/EditAlbum/Get`,
 		type: "Get",
 		data: { id: id, type: data },
 		dataType: "json"

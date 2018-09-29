@@ -100,7 +100,7 @@ namespace SLB_REST.Controllers
             }
         }
 
-        public IActionResult GetAlbumById(int id, string type)
+        public IActionResult GetAlbum(int id, string type)//łancuch zaleznosci
         {
 
             JObject getData = JObject.Parse(type);
@@ -222,7 +222,6 @@ namespace SLB_REST.Controllers
                     .ToList());
                 }
             }
-            //album.extraArtists = new List<dynamic>();
             return Json(album);
         }
 

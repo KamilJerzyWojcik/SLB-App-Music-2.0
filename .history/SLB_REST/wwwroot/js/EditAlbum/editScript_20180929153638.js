@@ -15,7 +15,7 @@
 	var data = JSON.stringify(getAlbum);
 
     $.ajax({
-        url: `/Home/GetAlbum`,
+        url: `/Home/GetAlbumById`,
 		type: "GET",
 		data: { id: id, type: data },
         dataType: "json"

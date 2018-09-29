@@ -322,7 +322,7 @@ function addCarousel(res) {
 
         if (i == 0) divItem.classList.add("active");
 
-        var imgContent = AlbumsHelper.addImgCarouselSLB(res, i);
+        var imgContent = AlbumsHelper.addImgCarousel(res, i);
 
         divItem.appendChild(imgContent);
         divInner.appendChild(divItem);

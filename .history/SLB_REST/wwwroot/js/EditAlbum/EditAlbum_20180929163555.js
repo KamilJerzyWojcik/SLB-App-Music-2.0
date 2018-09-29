@@ -16,10 +16,9 @@ function getThumbAlbumById(title, newtitle) {
     var data = JSON.stringify(getAlbum);
 
     $.ajax({
-        url: `/Home/GetAlbum`,
+        url: `/Home/GetThumbAlbum?id=${id}`,
         type: "GET",
-        dataType: "json",
-        data: { id: id, type: data }
+        dataType: "json"
     }).done(function (result) {
         addAlbumEdit(title, newtitle);
         addAlbumThumbEdit(result.thumbAlbum);

@@ -104,7 +104,7 @@
 
     img.classList.add("img-responsive");
     if (typeof (res.images) != "undefined")
-        var imageContent = res.images[i].uri != "" ? res.images[i].uri : "/img/cd.jpg";
+        var imageContent = res.images[i] != "" ? res.images[i] : "/img/cd.jpg";
     else
         var imageContent = "/img/cd.jpg";
 
@@ -112,25 +112,6 @@
     img.setAttribute("alt", "image0");
 
     return img;
-    }
-
-    addImgCarouselSLB(res, i) {
-        var img = document.createElement("img");
-        img.classList.add("first-slide");
-        img.classList.add("d-block");
-        img.classList.add("w-100");
-        img.style.width = "100%";
-
-        img.classList.add("img-responsive");
-        if (typeof (res.images) != "undefined")
-            var imageContent = res.images[i] != "" ? res.images[i] : "/img/cd.jpg";
-        else
-            var imageContent = "/img/cd.jpg";
-
-        img.setAttribute("src", imageContent);
-        img.setAttribute("alt", "image0");
-
-        return img;
     }
 
     addSpanToA(type, text) {

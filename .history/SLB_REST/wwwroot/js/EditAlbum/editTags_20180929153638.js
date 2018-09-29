@@ -57,7 +57,7 @@ function getGenres(id, textarea, button) {
 	var data = JSON.stringify(getAlbum);
 
 	$.ajax({
-		url: `/Home/GetAlbum`,
+		url: `/EditAlbum/Get`,
 		type: "Get",
 		data: { id: id, type: data },
 		dataType: "json"
@@ -113,7 +113,7 @@ function getStyles(id, textarea, button) {
 	var data = JSON.stringify(getAlbum);
 
 	$.ajax({
-		url: `/Home/GetAlbum`,
+		url: `/EditAlbum/Get`,
 		type: "Get",
 		data: { id: id, type: data },
 		dataType: "json"
@@ -169,7 +169,7 @@ function getArtists(id, textarea, button) {
 	var data = JSON.stringify(getAlbum);
 
 	$.ajax({
-		url: `/Home/GetAlbum`,
+		url: `/EditAlbum/Get`,
 		type: "Get",
 		data: { id: id, type: data },
 		dataType: "json"

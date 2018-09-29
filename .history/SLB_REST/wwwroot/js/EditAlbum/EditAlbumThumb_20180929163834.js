@@ -33,14 +33,21 @@
 
 function getAlbumThumb(tbody, id) {
 
-	var album = function () { }
-	var getAlbum = new album();
-	getAlbum.thumbAlbum = "?";
+	var album = function() {};
+  var getAlbum = new album();
+  getAlbum.title = "?";
+  getAlbum.styles = "?";
+  getAlbum.genres = "?";
+  getAlbum.images = "?";
+  getAlbum.videos = "?";
+  getAlbum.artists = "?";
+  getAlbum.tracks = "?";
+  getAlbum.extraartists = "?";
 
-	var data = JSON.stringify(getAlbum);
+  var data = JSON.stringify(getAlbum);
 
 	$.ajax({
-		url: `/Home/GetAlbum`,
+		url: `/EditAlbum/Get`,
 		type: "Get",
 		data: { id: id, type: data },
 		dataType: "json"

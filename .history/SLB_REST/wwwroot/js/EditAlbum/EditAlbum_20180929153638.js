@@ -8,21 +8,13 @@ function editAlbum(title, newtitle) {
 function getThumbAlbumById(title, newtitle) {
     addAlbumEdit(title, newtitle);
     var id = document.querySelector("main ul").getAttribute("id");
-
-    var album = function () { }
-    var getAlbum = new album();
-    getAlbum.thumbAlbum = "?";
-
-    var data = JSON.stringify(getAlbum);
-
     $.ajax({
-        url: `/Home/GetAlbum`,
+        url: `/Home/GetThumbAlbum?id=${id}`,
         type: "GET",
-        dataType: "json",
-        data: { id: id, type: data }
+        dataType: "json"
     }).done(function (result) {
         addAlbumEdit(title, newtitle);
-        addAlbumThumbEdit(result.thumbAlbum);
+        addAlbumThumbEdit(result);
     }).fail(function (e) {
     })
 }

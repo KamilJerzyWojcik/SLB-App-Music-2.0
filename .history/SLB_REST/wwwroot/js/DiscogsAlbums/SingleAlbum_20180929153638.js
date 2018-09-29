@@ -1,60 +1,14 @@
-﻿function showAlbum(albumId, page) {
+﻿function showAlbum(resouce, albums) {
 
-    var row = document.getElementById("albums-slb");
-    row.innerHTML = "";
+    showAlbumDetails(resouce, albums);
+    console.log(resouce);//pobrany json z danymi
+    console.log(albums);//lista wyszukań
 
-    var pagDiv = document.querySelector("nav ul.pagination");
-    pagDiv.innerHTML = "";
-
-    getAlbumById(albumId, page);
 }
 
-function getAlbumById(id, page) {
+function showAlbumDetails(res, albums) {
 
-	var album = function () { }
-	var getAlbum = new album();
-	getAlbum.title = "?";
-	getAlbum.styles = "?";
-	getAlbum.genres = "?";
-	getAlbum.images = "?";
-	getAlbum.videos = "?";
-	getAlbum.artists = "?";
-	getAlbum.tracks = "?";
-	getAlbum.extraartists = "?";
-
-	var data = JSON.stringify(getAlbum);
-
-
-    $.ajax({
-		url: `/Home/GetAlbum`,
-        type: "GET",
-		data: { id: id, type: data },
-		dataType: "json"
-	}).done(function (result) {
-
-		console.log(result);
-
-        showAlbumDetails(result, page);
-        addHead(result);
-		}).fail(function (e) {
-			console.log("bląd !!");
-    })
-}
-
-function addHead(result) {
-    var alertDiv = document.querySelector("div.album");
-    var hTitle = document.createElement("h2");
-    hTitle.innerText = result.title;
-    var hArtist = document.createElement("h3");
-    hArtist.innerText = result.artists[0].name;
-
-    alertDiv.appendChild(hTitle);
-    alertDiv.appendChild(hArtist);
-}
-
-function showAlbumDetails(res, page) {
-
-    addButtons(page, res);
+    addButtons(albums, res);
     addCarousel(res);
     addTracks(res);
     AddNavYt(res)
@@ -81,7 +35,7 @@ function addVideoSelect(actual, res) {
     for (let i = 0; i < res.videos.length; i++) {
 
         var option = document.createElement("option");
-        option.innerText = res.videos[i].description;
+        option.innerText = res.videos[i].title;
         option.setAttribute("id", "option" + i);
         if (i == actual) option.setAttribute("selected", "selected");
 
@@ -132,7 +86,7 @@ function AddYoutubeFrame(actual, res) {
 }
 
 function AddNavYt(album) {
-    if (typeof album.videos != 'undefined' && album.videos.length != 0) {
+    if (typeof album.videos != 'undefined') {
 
         $("#player-nav").remove();
         var AlbumsHelper = new htmlAlbumsHelper();
@@ -221,11 +175,11 @@ function addTracks(resouce) {
     divCard.classList.add("card");
     divCard.classList.add("card-body");
 
-    if (typeof resouce.tracks != 'undefined' && resouce.tracks.length != 0) {
-        for (let i = 0; i < resouce.tracks.length; i++) {
+    if (typeof resouce.tracklist != 'undefined') {
+        for (let i = 0; i < resouce.tracklist.length; i++) {
             var p = document.createElement("p");
             p.classList.add("paragraph-content");
-            p.innerText = `${resouce.tracks[i].position} | ${resouce.tracks[i].duration} | ${resouce.tracks[i].title}`;
+            p.innerText = `${resouce.tracklist[i].position} | ${resouce.tracklist[i].duration} | ${resouce.tracklist[i].title}`;
             p.classList.add("border");
             p.classList.add("border-primary");
 
@@ -234,18 +188,19 @@ function addTracks(resouce) {
 
             var div2 = document.createElement("div");
 
-            if (typeof (resouce.extraArtists[i]) != 'undefined') {
+            if (typeof (resouce.tracklist[i].extraartists) != 'undefined') {
 
-                for (let j = 0; j < resouce.extraArtists[i].length; j++) {
+                for (let j = 0; j < resouce.tracklist[i].extraartists.length; j++) {
 
                     var aArtist = document.createElement("a");
                     aArtist.classList.add("btn");
                     aArtist.classList.add("btn-link");
                     aArtist.setAttribute("href", "#");
-                    if (j == resouce.extraArtists[i].length - 1) aArtist.innerText = resouce.extraArtists[i][j].name;
-                    else aArtist.innerText = resouce.extraArtists[i][j].name + ", ";
+                    if (j == resouce.tracklist[i].extraartists.length - 1) aArtist.innerText = resouce.tracklist[i].extraartists[j].name;
+                    else aArtist.innerText = resouce.tracklist[i].extraartists[j].name + ", ";
 
                     aArtist.addEventListener("click", function () {
+
                     });
                     div2.appendChild(aArtist);
 
@@ -278,7 +233,7 @@ function addTracks(resouce) {
 
 }
 
-function addButtons(page, resouce) {
+function addButtons(albums, resouce) {
     var AlbumsHelper = new htmlAlbumsHelper();
 
     var btnBack = document.getElementById("btn-back");
@@ -286,21 +241,39 @@ function addButtons(page, resouce) {
 
     var backButton = AlbumsHelper.addButton("Back", "warning", btnBack);
     backButton.classList.add("btn-block")
+
     backButton.addEventListener("click", function () {
         $("iframe").remove();
         $("#player-nav").remove();
         $("#videos-div").remove();
-        var trackDiv = document.getElementById("tracks-list");
-        trackDiv.innerHTML = "";
-        var carousel = document.querySelector("div#myCarousel");
-        carousel.innerHTML = "";
-        var btnBack = document.getElementById("btn-back")
-        btnBack.innerHTML = "";
-        var albumH2 = document.querySelector("div.album h2");
-        if (albumH2 != null) albumH2.remove();
-        var albumH3 = document.querySelector("div.album h3");
-        if (albumH3 != null) albumH3.remove();
-        getAlbums(page);
+        addAlbums(albums);
+    });
+
+    var btnAdd = document.getElementById("btn-add");
+    btnAdd.innerHTML = "";
+    var addButton = AlbumsHelper.addButton("Add album", "success", btnAdd);
+    addButton.classList.add("btn-block");
+    addButton.addEventListener("click", function (event) {
+        event.path[0].remove();
+        var loaderDiv = document.createElement("div");
+        loaderDiv.classList.add("loader");
+        var btnLoader = document.getElementById("btn-add");
+        btnLoader.appendChild(loaderDiv);
+
+        $.ajax({
+            url: "/Discogs/Add",
+            data: { link: JSON.stringify(resouce) },
+            type: "POST"
+        }).done(function () {
+            var btnLoader = document.getElementById("btn-add").querySelector("div.loader");
+            if (btnLoader != null) btnLoader.remove();
+            var info = document.getElementById("added");
+            info.style.color = "green";
+            info.innerText = `Album ${resouce.title} was added`;
+
+        }).fail(function () {
+            addButtons(albums, resouce);
+        })
     });
 
 }
@@ -322,7 +295,7 @@ function addCarousel(res) {
 
         if (i == 0) divItem.classList.add("active");
 
-        var imgContent = AlbumsHelper.addImgCarouselSLB(res, i);
+        var imgContent = AlbumsHelper.addImgCarousel(res, i);
 
         divItem.appendChild(imgContent);
         divInner.appendChild(divItem);

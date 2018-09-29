@@ -11,15 +11,23 @@ function getThumbAlbumById(title, newtitle) {
 
     var album = function () { }
     var getAlbum = new album();
-    getAlbum.thumbAlbum = "?";
+    getAlbum.title = "?";
+    getAlbum.styles = "?";
+    getAlbum.genres = "?";
+    getAlbum.images = "?";
+    getAlbum.videos = "?";
+    getAlbum.artists = "?";
+    getAlbum.tracks = "?";
+    getAlbum.extraartists = "?";
 
     var data = JSON.stringify(getAlbum);
 
+
+
     $.ajax({
-        url: `/Home/GetAlbum`,
+        url: `/Home/GetThumbAlbum?id=${id}`,
         type: "GET",
-        dataType: "json",
-        data: { id: id, type: data }
+        dataType: "json"
     }).done(function (result) {
         addAlbumEdit(title, newtitle);
         addAlbumThumbEdit(result.thumbAlbum);
