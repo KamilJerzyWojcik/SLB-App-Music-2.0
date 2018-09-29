@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using SLB_REST.Context;
+using SLB_REST.Helpers.DataBaseStrategy.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,8 @@ namespace SLB_REST.Helpers.DataBaseStrategy
     {
         public JObject JsonFile { get; private set; }
         public int UserId { get; private set; }
+        public dynamic album { get; private set; }
+
         private ISaveChanges _context;
 
         public ISaveChanges Context(ISaveChanges context)
@@ -19,16 +22,16 @@ namespace SLB_REST.Helpers.DataBaseStrategy
             return this;
         }
 
-        public ISaveChanges Load(JObject json, int userId)
+        public ISaveChanges Data(JObject json, int userId)
         {
             JsonFile = json;
             UserId = userId;
             return this;
         }
 
-        public void SaveChanges(EFContext EFcontext)
+        public void Save(EFContext EFcontext)
         {
-            _context.Load(JsonFile, UserId).SaveChanges(EFcontext);
+            _context.Data(JsonFile, UserId).Save(EFcontext);
         }
     }
 }

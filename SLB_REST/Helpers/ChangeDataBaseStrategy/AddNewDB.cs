@@ -15,14 +15,14 @@ namespace SLB_REST.Helpers.DataBaseStrategy
 		public int UserId { get; private set; }
 		private int _albumId;
 
-		public ISaveChanges Load(JObject json, int userId)
+		public ISaveChanges Data(JObject json, int userId)
 		{
 			JsonFile = json;
 			UserId = userId;
 			return this;
 		}
 
-		public void SaveChanges(EFContext _context )
+		public void Save(EFContext _context )
 		{
 			List<int> ids = new List<int>(){ UserId };
 

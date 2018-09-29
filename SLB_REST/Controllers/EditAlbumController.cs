@@ -49,8 +49,8 @@ namespace SLB_REST.Controllers
 
             _databaseStrategy
             .Context(new EditDB())
-            .Load(JObject.Parse(data), userId)
-            .SaveChanges(_context);
+            .Data(JObject.Parse(data), userId)
+            .Save(_context);
 
             return Ok();
         }

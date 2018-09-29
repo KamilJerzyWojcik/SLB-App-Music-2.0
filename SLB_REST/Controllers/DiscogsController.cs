@@ -75,8 +75,8 @@ namespace SLB_REST.Controllers
 
             _databaseStrategy
             .Context(new AddNewDB())
-            .Load(JObject.Parse(link), userId)
-            .SaveChanges(_context);
+            .Data(JObject.Parse(link), userId)
+            .Save(_context);
 
             return Ok();
         }

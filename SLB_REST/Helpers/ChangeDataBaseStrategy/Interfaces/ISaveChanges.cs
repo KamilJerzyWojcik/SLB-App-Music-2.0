@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 namespace SLB_REST.Helpers.DataBaseStrategy
 {
 	public interface ISaveChanges
-	{
+    {
 		JObject JsonFile { get; }
 		int UserId{ get; }
-		ISaveChanges Load(JObject json, int userId);
-		void SaveChanges(EFContext EFcontext);
+		ISaveChanges Data(JObject json, int userId);
+		void Save(EFContext EFcontext);
 	}
 }
