@@ -1,19 +1,17 @@
 ﻿using Newtonsoft.Json.Linq;
 using SLB_REST.Context;
-using SLB_REST.Helpers.DataBaseStrategy.Interfaces;
+using SLB_REST.Helpers.DataBaseStrategy;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SLB_REST.Helpers.DataBaseStrategy
+namespace SLB_REST.Helpers.ChangeDatabaseStrategy
 {
-    public class DatabaseStrategy : ISaveChanges
+    public class ChangeDatabaseStrategy : ISaveChanges
     {
         public JObject JsonFile { get; private set; }
         public int UserId { get; private set; }
-        public dynamic album { get; private set; }
-
         private ISaveChanges _context;
 
         public ISaveChanges Context(ISaveChanges context)

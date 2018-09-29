@@ -5,7 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Helpers\GetDataBaseStrategy\ChainRespGetDB\" />
     <Folder Include="wwwroot\lib\jQuery\" />
   </ItemGroup>
 

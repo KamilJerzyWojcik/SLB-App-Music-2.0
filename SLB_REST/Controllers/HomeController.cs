@@ -13,6 +13,8 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SLB_REST.Context;
 using SLB_REST.Helpers;
+using SLB_REST.Helpers.DataBaseStrategy;
+using SLB_REST.Helpers.GetDataBaseStrategy;
 using SLB_REST.Models;
 using SLB_REST.Models.Albums;
 using SLB_REST.Models.ViewAlbums;
@@ -23,10 +25,13 @@ namespace SLB_REST.Controllers
     public class HomeController : Controller
     {
         private readonly EFContext _context;
+        private readonly GetDataBaseStrategy _getDataBaseStrategy;
 
-        public HomeController(EFContext context)
+
+        public HomeController(EFContext context, GetDataBaseStrategy getDataBaseStrategy)
         {
             _context = context;
+            _getDataBaseStrategy = getDataBaseStrategy;
         }
 
         public IActionResult Albums(string titleDelete = "", int idDelete = 0)
@@ -60,7 +65,8 @@ namespace SLB_REST.Controllers
                     .Where(t => t.User.UserName == User.Identity.Name)
                     .Include(t => t.Album)
                     .Skip(page * 6).Take(6)
-                    .Select(a => new {
+                    .Select(a => new
+                    {
                         a.ImageThumbSrc,
                         a.Title,
                         a.Style,
@@ -102,19 +108,25 @@ namespace SLB_REST.Controllers
 
         public IActionResult GetAlbum(string data)//łancuch zaleznosci
         {
-            
+
             JObject getData = JObject.Parse(data);
             int id = (int)getData["id"];
             dynamic album = new ExpandoObject();
 
-            if (!(getData["title"] is null))
-            {
-                album.title = _context
-                    .Albums
-                    .Where(g => g.ID == id)
-                    .Select(g => g.Title)
-                    .SingleOrDefault();
-            }
+            album = _getDataBaseStrategy
+                .Context(new GetSingleDB())
+                .Data(getData)
+                .Get(_context);
+
+            //if (!(getData["title"] is null))
+            //{
+            //    //album.title = _context
+            //    //    .Albums
+            //    //    .Where(g => g.ID == id)
+            //    //    .Select(g => g.Title)
+            //    //    .SingleOrDefault();
+
+            //}
 
             if (!(getData["genres"] is null))
             {

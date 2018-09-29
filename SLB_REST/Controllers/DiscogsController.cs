@@ -11,6 +11,7 @@ using SLB_REST.Helpers.DataBaseStrategy;
 using SLB_REST.Helpers.Proxy;
 using SLB_REST.Models;
 using Newtonsoft.Json.Linq;
+using SLB_REST.Helpers.ChangeDatabaseStrategy;
 
 namespace SLB_REST.Controllers
 {
@@ -19,12 +20,12 @@ namespace SLB_REST.Controllers
     {
         private readonly EFContext _context;
         private readonly ProxyDiscogs _proxyDiscogs;
-        private readonly DatabaseStrategy _databaseStrategy;
+        private readonly ChangeDatabaseStrategy _databaseStrategy;
 
         public DiscogsController(
             EFContext context,
             ProxyDiscogs proxyDiscogs,
-            DatabaseStrategy databaseStrategy)
+            ChangeDatabaseStrategy databaseStrategy)
         {
             _context = context;
             _proxyDiscogs = proxyDiscogs;

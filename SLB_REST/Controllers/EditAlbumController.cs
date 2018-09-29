@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
 using SLB_REST.Context;
 using SLB_REST.Helpers;
+using SLB_REST.Helpers.ChangeDatabaseStrategy;
 using SLB_REST.Helpers.DataBaseStrategy;
 using SLB_REST.Models;
 using SLB_REST.Models.AlbumDiscogs.Interfaces;
@@ -19,13 +20,13 @@ namespace SLB_REST.Controllers
     {
         private readonly EFContext _context;
         private SourceManagerDeleteAlbum _sourceManagerDeleteAlbum;
-        private DatabaseStrategy _databaseStrategy;
+        private ChangeDatabaseStrategy _databaseStrategy;
 
 
         public EditAlbumController(
             EFContext context,
             SourceManagerDeleteAlbum sourceManagerDeleteAlbum,
-            DatabaseStrategy databaseStrategy)
+            ChangeDatabaseStrategy databaseStrategy)
         {
             _context = context;
             _sourceManagerDeleteAlbum = sourceManagerDeleteAlbum;
