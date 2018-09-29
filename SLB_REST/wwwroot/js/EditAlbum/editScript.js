@@ -1,8 +1,9 @@
 ﻿$(function () {
     var id = document.querySelector("main ul").getAttribute("id");
 
-	var album = function () { }
+	var album = function () { };
 	var getAlbum = new album();
+	getAlbum.id = id;
 	getAlbum.title = "?";
 	getAlbum.styles = "?";
 	getAlbum.genres = "?";
@@ -17,7 +18,7 @@
     $.ajax({
         url: `/Home/GetAlbum`,
 		type: "GET",
-		data: { id: id, type: data },
+		data: { data: data },
         dataType: "json"
     }).done(function (result) {
         addPagination(id);

@@ -13,6 +13,7 @@ function getAlbumById(id, page) {
 
 	var album = function () { }
 	var getAlbum = new album();
+	getAlbum.id = id;
 	getAlbum.title = "?";
 	getAlbum.styles = "?";
 	getAlbum.genres = "?";
@@ -28,7 +29,7 @@ function getAlbumById(id, page) {
     $.ajax({
 		url: `/Home/GetAlbum`,
         type: "GET",
-		data: { id: id, type: data },
+		data: { data: data },
 		dataType: "json"
 	}).done(function (result) {
 

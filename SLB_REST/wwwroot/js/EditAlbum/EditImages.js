@@ -18,17 +18,17 @@
 
 function getImages(tbody, id) {
 
+	var album = function () { };
+	var getAlbum = new album();
+	getAlbum.id = id;
+	getAlbum.images = "?";
 
-	var album = function (images) {
-		this.images = images;
-	}
-	var getAlbum = new album("?");
 	var data = JSON.stringify(getAlbum);
 
 	$.ajax({
 		url: `/Home/GetAlbum`,
 		type: "Get",
-		data: { id: id, type: data },
+		data: { data: data },
 		dataType: "json"
 	}).done(function (result) {
 		setBodyImages(result.images, tbody);

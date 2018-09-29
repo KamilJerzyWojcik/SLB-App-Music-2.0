@@ -10,7 +10,8 @@ function getThumbAlbumById(title, newtitle) {
     var id = document.querySelector("main ul").getAttribute("id");
 
     var album = function () { }
-    var getAlbum = new album();
+	var getAlbum = new album();
+	getAlbum.id = id;
     getAlbum.thumbAlbum = "?";
 
     var data = JSON.stringify(getAlbum);
@@ -19,7 +20,7 @@ function getThumbAlbumById(title, newtitle) {
         url: `/Home/GetAlbum`,
         type: "GET",
         dataType: "json",
-        data: { id: id, type: data }
+        data: { data: data }
     }).done(function (result) {
         addAlbumEdit(title, newtitle);
         addAlbumThumbEdit(result.thumbAlbum);

@@ -48,7 +48,7 @@ namespace SLB_REST.Controllers
             return View();
         }
 
-        public IActionResult GetThumbAlbum(int page, int id = -1)
+        public IActionResult GetThumbAlbums(int page, int id = -1)
         {
             if (id == -1)
             {
@@ -100,10 +100,11 @@ namespace SLB_REST.Controllers
             }
         }
 
-        public IActionResult GetAlbum(int id, string type)//łancuch zaleznosci
+        public IActionResult GetAlbum(string data)//łancuch zaleznosci
         {
-
-            JObject getData = JObject.Parse(type);
+            
+            JObject getData = JObject.Parse(data);
+            int id = (int)getData["id"];
             dynamic album = new ExpandoObject();
 
             if (!(getData["title"] is null))

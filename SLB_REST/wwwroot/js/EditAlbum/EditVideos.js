@@ -20,10 +20,19 @@ function getVideos(id, table) {
 	var getAlbum = new album("?");
 	var data = JSON.stringify(getAlbum);
 
+
+	var album = function () { };
+	var getAlbum = new album();
+	getAlbum.id = id;
+	getAlbum.videos = "?";
+
+
+	var data = JSON.stringify(getAlbum);
+
 	$.ajax({
 		url: `/Home/GetAlbum`,
 		type: "Get",
-		data: { id: id, type: data },
+		data: { data: data },
 		dataType: "json"
 	}).done(function (result) {
 		setBodyVideos(result.videos, table);

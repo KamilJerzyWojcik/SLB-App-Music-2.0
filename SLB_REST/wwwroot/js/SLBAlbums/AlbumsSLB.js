@@ -6,7 +6,7 @@
 
 function getAlbums(page) {
     $.ajax({
-        url: `/Home/GetThumbAlbum`,
+        url: `/Home/GetThumbAlbums`,
         type: "GET",
 		dataType: "json",
 		data: {page: page}
