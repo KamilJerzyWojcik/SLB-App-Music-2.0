@@ -37,7 +37,8 @@
                 <li class="nav-item">
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <a class="nav-link disabled" id="log-button" asp-action="LogOut" asp-controller="Account">Logout @User.Identity.Name <span class="sr-only">(current)</span></a>
+                        <a class="nav-link disabled" id="log-button" asp-action="LogOut" asp-controller="Account">Logout <span id="UserName">@User.Identity.Name</span><span class="sr-only">(current)</span></a>
+						
                     }
                     else
                     {

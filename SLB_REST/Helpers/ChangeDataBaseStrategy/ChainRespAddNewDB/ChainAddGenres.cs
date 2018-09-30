@@ -39,11 +39,12 @@ namespace SLB_REST.Helpers.DataBaseStrategy.DBChainResp
 
 						context.Genres.Add(genre);
 						context.SaveChanges();
-
-						if (Successor != null)
-							Successor.ChangeDB(context, jsonFile, ids);
+						
 					}
-				}
+
+                    if (Successor != null)
+                        Successor.ChangeDB(context, jsonFile, ids);
+                }
 				catch (Exception)
 				{
 					var genre = new GenreModel()
@@ -58,6 +59,8 @@ namespace SLB_REST.Helpers.DataBaseStrategy.DBChainResp
 
 					if (Successor != null)
 						Successor.ChangeDB(context, jsonFile, ids);
+
+                    return;
 				}
 			}
 		}

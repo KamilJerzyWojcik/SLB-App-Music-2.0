@@ -28,11 +28,11 @@ namespace SLB_REST.Helpers.DataBaseStrategy.DBChainResp
 			else
 			{
 				List<int> tracksId = context
-			.Tracks
-			.Include(t => t.Album)
-			.Where(t => t.Album.ID == ids[1])
-			.Select(t => t.ID)
-			.ToList();
+			        .Tracks
+			        .Include(t => t.Album)
+			        .Where(t => t.Album.ID == ids[1])
+			        .Select(t => t.ID)
+			        .ToList();
 				try
 				{
 					for (int i = 0; i < tracksId.Count; i++)

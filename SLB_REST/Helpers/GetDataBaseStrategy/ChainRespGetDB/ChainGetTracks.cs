@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 using SLB_REST.Context;
 using SLB_REST.Helpers.GetDataBaseStrategy.Interfaces;
 using System;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SLB_REST.Helpers.GetDataBaseStrategy.ChainRespGetDB
 {
-    public class ChainGetTitle : IChainGet
+    public class ChainGetTracks : IChainGet
     {
         public IChainGet Successor { get; private set; }
 
@@ -19,7 +20,7 @@ namespace SLB_REST.Helpers.GetDataBaseStrategy.ChainRespGetDB
 
         public void GetDB(EFContext context, JObject jsonFile, dynamic album)
         {
-            if (jsonFile["title"] is null)
+            if (jsonFile["videos"] is null)
             {
                 if (Successor != null)
                     Successor.GetDB(context, jsonFile, album);
@@ -29,12 +30,18 @@ namespace SLB_REST.Helpers.GetDataBaseStrategy.ChainRespGetDB
                 try
                 {
                     int id = (int)jsonFile["id"];
-
-                    album.title = context
-                        .Albums
-                        .Where(g => g.ID == id)
-                        .Select(g => g.Title)
-                        .SingleOrDefault();
+                    album.tracks = context
+                        .Tracks
+                        .Include(v => v.Album)
+                        .Where(v => v.Album.ID == id)
+                        .Select(t => new
+                        {
+                            t.Duration,
+                            t.Position,
+                            t.Title,
+                            t.ID
+                        })
+                        .ToList();
 
                     if (Successor != null)
                         Successor.GetDB(context, jsonFile, album);
@@ -47,6 +54,6 @@ namespace SLB_REST.Helpers.GetDataBaseStrategy.ChainRespGetDB
             }
         }
 
-
+        
     }
 }

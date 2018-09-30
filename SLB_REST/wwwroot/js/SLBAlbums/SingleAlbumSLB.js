@@ -235,7 +235,7 @@ function addTracks(resouce) {
 
             var div2 = document.createElement("div");
 
-            if (typeof (resouce.extraArtists[i]) != 'undefined') {
+            if (typeof (resouce.extraArtists) != 'undefined') {
 
                 for (let j = 0; j < resouce.extraArtists[i].length; j++) {
 

@@ -5,11 +5,24 @@
 });
 
 function getAlbums(page) {
+
+	var user = document.getElementById("UserName");
+	console.log("user: " + user.innerText);
+
+	var album = function () { };
+	var getAlbum = new album();
+	getAlbum.user = user.innerText;
+	getAlbum.id = -1;
+	getAlbum.page = page;
+	getAlbum.thumbAlbum = "?";
+
+	var data = JSON.stringify(getAlbum);
+
     $.ajax({
-        url: `/Home/GetThumbAlbums`,
+        url: `/Home/GetAlbum`,
         type: "GET",
 		dataType: "json",
-		data: {page: page}
+		data: { data: data}
 	}).done(function (result) {
 
 		console.log(result);
@@ -153,7 +166,7 @@ function showThumbAlbums(albums, page) {
         aView.setAttribute("href", "#");
         aView.addEventListener("click", function () {
             $("#confirm").remove();
-            showAlbum(albums.id[i], page);
+			showAlbum(albums.thumbAlbums[i].album.id, page);
         });
         divBtns.appendChild(aView);
 
@@ -163,7 +176,7 @@ function showThumbAlbums(albums, page) {
         aEdit.classList.add("btn-outline-secondary");
         aEdit.setAttribute("type", "button");
         aEdit.innerText = "Edit";
-        aEdit.setAttribute("href", `/EditAlbum/Edit?id=${albums.id[i]}`);
+		aEdit.setAttribute("href", `/EditAlbum/Edit?id=${albums.thumbAlbums[i].album.id}`);
 
         divBtns.appendChild(aEdit);
 
